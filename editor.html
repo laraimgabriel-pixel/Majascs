@@ -1,0 +1,4469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jangg Birthday — Private Editor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top left, #ffdce9 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #f8c7d9 0%, transparent 35%),
+                #fff5f8;
+            color: #5a3544;
+            min-height: 100vh;
+            padding: 30px 18px;
+        }
+
+        .editor-container {
+            width: min(1000px, 100%);
+            margin: auto;
+        }
+
+        .editor-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .editor-header .small {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #b77b91;
+        }
+
+        .editor-header h1 {
+            margin: 8px 0;
+            font-size: clamp(30px, 6vw, 48px);
+            font-weight: 500;
+            color: #713f52;
+        }
+
+        .editor-header p {
+            color: #9b6b7e;
+            margin: 0;
+        }
+
+        .editor-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(202, 137, 160, 0.25);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 15px 40px rgba(150, 83, 110, 0.08);
+        }
+
+        .editor-card h2 {
+            margin: 0 0 18px;
+            color: #713f52;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .section-description {
+            color: #a17486;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            color: #87566a;
+            letter-spacing: 0.4px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1px solid #e7c2d0;
+            border-radius: 13px;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #5a3544;
+            background: #fffafb;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #c889a2;
+            box-shadow: 0 0 0 3px rgba(200, 137, 162, 0.12);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* PHOTO GRID */
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .photo-editor {
+            background: #fff7fa;
+            border: 1px solid #efd3de;
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .photo-editor-title {
+            margin-bottom: 12px;
+            color: #87566a;
+            font-size: 16px;
+        }
+
+        /* MEMORY GRID */
+
+        .memory-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .memory-editor {
+            background: #fff7fa;
+            border: 1px solid #efd3de;
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .memory-editor h3 {
+            margin: 0 0 15px;
+            color: #87566a;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .memory-editor .field {
+            margin-bottom: 13px;
+        }
+
+        .memory-editor textarea {
+            min-height: 150px;
+        }
+
+        /* IMAGE UPLOAD */
+
+        .image-upload-box {
+            margin-bottom: 16px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 190px;
+            border-radius: 15px;
+            border: 1px dashed #e3b9c9;
+            background: #fffafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-placeholder {
+            text-align: center;
+            color: #b98a9c;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .image-placeholder .heart {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .upload-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-button {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 17px;
+            background: #d58ca7;
+            color: white;
+            font-family: inherit;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        .upload-button:hover {
+            background: #bd728f;
+            transform: translateY(-1px);
+        }
+
+        .upload-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .upload-status {
+            font-size: 12px;
+            color: #9b6b7e;
+        }
+
+        .uploaded-url {
+            font-size: 11px;
+            color: #a17486;
+            word-break: break-all;
+            margin-top: 7px;
+        }
+
+        /* SAVE AREA */
+
+        .save-area {
+            text-align: center;
+            padding: 10px 0 30px;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 999px;
+            padding: 14px 25px;
+            font-family: inherit;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+
+        #save-button {
+            background: #c17f99;
+            box-shadow: 0 10px 25px rgba(177, 103, 132, 0.22);
+        }
+
+        #publish-button {
+            background: #b86d8c;
+        }
+
+        #unpublish-button {
+            background: #a97989;
+        }
+
+        #logout-button {
+            background: #d7a1b5;
+        }
+
+        .action-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #save-status {
+            min-height: 22px;
+            margin-top: 12px;
+            color: #8e5c70;
+            font-size: 14px;
+        }
+
+        .note {
+            margin-top: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #a17486;
+        }
+
+        /* LOGIN */
+
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background:
+                radial-gradient(circle at top left, #ffd9e7, transparent 35%),
+                radial-gradient(circle at bottom right, #ffeef5, transparent 35%),
+                #fff7fa;
+        }
+
+        .login-card {
+            width: min(500px, 100%);
+            padding: 40px;
+            background: rgba(255,255,255,.96);
+            border: 1px solid rgba(220,150,175,.35);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(160,75,105,.12);
+            text-align: center;
+        }
+
+        .login-heart {
+            font-size: 32px;
+            color: #c96f8a;
+            margin-bottom: 8px;
+        }
+
+        .login-card h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: normal;
+            color: #704653;
+        }
+
+        .login-card > p {
+            margin: 12px 0 25px;
+            color: #936875;
+            line-height: 1.6;
+        }
+
+        .login-card label {
+            text-align: left;
+            margin: 16px 0 7px;
+        }
+
+        #login-button {
+            margin-top: 24px;
+            border: none;
+            border-radius: 999px;
+            padding: 13px 30px;
+            background: #c96f8a;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        #login-button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        #login-status {
+            min-height: 20px;
+            margin-top: 15px;
+            color: #a64d67;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .memory-editor-grid,
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-card {
+                padding: 20px;
+            }
+
+            .upload-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .upload-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div id="login-screen">
+
+    <div class="login-card">
+
+        <div class="login-heart">♡</div>
+
+        <h1>Private Editor</h1>
+
+        <p>
+            Log in to edit Jangg's birthday website.
+        </p>
+
+        <label for="login-email">Email</label>
+
+        <input
+            type="email"
+            id="login-email"
+            placeholder="Your email"
+            autocomplete="email"
+        >
+
+        <label for="login-password">Password</label>
+
+        <input
+            type="password"
+            id="login-password"
+            placeholder="Your password"
+            autocomplete="current-password"
+        >
+
+        <button id="login-button">
+            Log in ♡
+        </button>
+
+        <p id="login-status"></p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EDITOR
+========================================================= -->
+
+<div class="editor-container" style="display:none;">
+
+    <header class="editor-header">
+
+        <div class="small">
+            private editor ♡
+        </div>
+
+        <h1>
+            Jangg's Birthday
+        </h1>
+
+        <p>
+            Edit everything here, then save and publish.
+        </p>
+
+    </header>
+
+
+    <!-- BASIC INFORMATION -->
+
+    <section class="editor-card">
+
+        <h2>Basic Information</h2>
+
+        <div class="field">
+
+            <label for="person-name">
+                Name / Nickname
+            </label>
+
+            <input
+                type="text"
+                id="person-name"
+                placeholder="Jangg"
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label for="birthday">
+                Birthday
+            </label>
+
+            <input
+                type="text"
+                id="birthday"
+                placeholder="October 29, 2009"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- WELCOME -->
+
+    <section class="editor-card">
+
+        <h2>Welcome Section</h2>
+
+        <div class="field">
+
+            <label for="welcome-message">
+                Main Welcome Message
+            </label>
+
+            <input
+                type="text"
+                id="welcome-message"
+                placeholder="Happy Birthday, Jangg ♡"
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label for="welcome-submessage">
+                Small Message
+            </label>
+
+            <textarea
+                id="welcome-submessage"
+                placeholder="A little something made just for you..."
+            ></textarea>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PHOTO SCRAPBOOK
+    ====================================================== -->
+
+    <section class="editor-card">
+
+        <h2>Photo Scrapbook</h2>
+
+        <p class="section-description">
+            Upload your 8 photos and write a caption for each one.
+        </p>
+
+        <div class="photo-grid">
+
+            <!-- PHOTO 1 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 1 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-1"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-1"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-1"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-1"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-1"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-1"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-1">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-1"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 2 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 2 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-2"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-2"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-2"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-2"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-2"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-2"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-2">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-2"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 3 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 3 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-3"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-3"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-3"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-3"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-3"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-3"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-3">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-3"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 4 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 4 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-4"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-4"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-4"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-4"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-4"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-4"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-4">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-4"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 5 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 5 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-5"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-5"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-5"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-5"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-5"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-5"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-5">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-5"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 6 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 6 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-6"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-6"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-6"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-6"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-6"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-6"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-6">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-6"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 7 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 7 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-7"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-7"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-7"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-7"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-7"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-7"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-7">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-7"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO 8 -->
+
+            <div class="photo-editor">
+
+                <div class="photo-editor-title">
+                    Photo 8 ♡
+                </div>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="photo-preview-8"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="photo-file-8"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="photo-file-8"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="photo-status-8"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="photo-url-8"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="photo-image-8"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="photo-caption-8">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="photo-caption-8"
+                        placeholder="Write a little caption..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         THREE MEMORIES
+    ====================================================== -->
+
+    <section class="editor-card">
+
+        <h2>Three Little Memories</h2>
+
+        <p class="section-description">
+            Upload a photo and edit the title, date and story.
+        </p>
+
+        <div class="memory-editor-grid">
+
+
+            <!-- MEMORY 1 -->
+
+            <div class="memory-editor">
+
+                <h3>
+                    Memory 1 ♡
+                </h3>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="memory-preview-1"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="memory-file-1"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="memory-file-1"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="memory-status-1"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="memory-url-1"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="memory-image-1"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-title-1">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-title-1"
+                        placeholder="A little moment ♡"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-date-1">
+                        Date
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-date-1"
+                        placeholder="A special day"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-story-1">
+                        Story
+                    </label>
+
+                    <textarea
+                        id="memory-story-1"
+                        placeholder="Write something about this memory..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMORY 2 -->
+
+            <div class="memory-editor">
+
+                <h3>
+                    Memory 2 ♡
+                </h3>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="memory-preview-2"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="memory-file-2"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="memory-file-2"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="memory-status-2"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="memory-url-2"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="memory-image-2"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-title-2">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-title-2"
+                        placeholder="One I'll remember ♡"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-date-2">
+                        Date
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-date-2"
+                        placeholder="A special day"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-story-2">
+                        Story
+                    </label>
+
+                    <textarea
+                        id="memory-story-2"
+                        placeholder="Write something about this memory..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMORY 3 -->
+
+            <div class="memory-editor">
+
+                <h3>
+                    Memory 3 ♡
+                </h3>
+
+                <div class="image-upload-box">
+
+                    <div
+                        class="image-preview"
+                        id="memory-preview-3"
+                    >
+                        <div class="image-placeholder">
+                            <div class="heart">♡</div>
+                            Choose a photo
+                        </div>
+                    </div>
+
+                    <input
+                        type="file"
+                        class="file-input"
+                        id="memory-file-3"
+                        accept="image/*"
+                    >
+
+                    <div class="upload-row">
+
+                        <label
+                            class="upload-button"
+                            for="memory-file-3"
+                        >
+                            Choose Photo
+                        </label>
+
+                        <span
+                            class="upload-status"
+                            id="memory-status-3"
+                        ></span>
+
+                    </div>
+
+                    <div
+                        class="uploaded-url"
+                        id="memory-url-3"
+                    ></div>
+
+                    <input
+                        type="hidden"
+                        id="memory-image-3"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-title-3">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-title-3"
+                        placeholder="Another favorite ♡"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-date-3">
+                        Date
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memory-date-3"
+                        placeholder="A special day"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="memory-story-3">
+                        Story
+                    </label>
+
+                    <textarea
+                        id="memory-story-3"
+                        placeholder="Write something about this memory..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BIRTHDAY LETTER -->
+
+    <section class="editor-card">
+
+        <h2>
+            Birthday Letter
+        </h2>
+
+        <div class="field">
+
+            <label for="letter-message">
+                Letter
+            </label>
+
+            <textarea
+                id="letter-message"
+                style="min-height:280px;"
+                placeholder="Write your birthday message here..."
+            ></textarea>
+
+        </div>
+
+        <div class="field">
+
+            <label for="letter-signature">
+                Signature
+            </label>
+
+            <input
+                type="text"
+                id="letter-signature"
+                placeholder="With love ♡"
+            >
+
+        </div>
+
+    </section>
+
+<!-- APPRECIATION -->
+<section class="editor-card">
+    <h2>
+        Appreciation ♡
+    </h2>
+
+    <p class="section-description">
+        Customize the heading and all 5 appreciation cards.
+    </p>
+
+    <div class="field">
+        <label for="appreciation-kicker">
+            Small Heading
+        </label>
+        <input
+            type="text"
+            id="appreciation-kicker"
+            placeholder="just a few little things ♡"
+        >
+    </div>
+
+    <div class="field">
+        <label for="appreciation-title">
+            Main Heading
+        </label>
+        <input
+            type="text"
+            id="appreciation-title"
+            placeholder="Things I Appreciate About You"
+        >
+    </div>
+
+    <div class="field">
+        <label for="appreciation-intro">
+            Introduction
+        </label>
+        <textarea
+            id="appreciation-intro"
+            placeholder="Write the introduction..."
+        ></textarea>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="memory-editor">
+        <h3>Appreciation Card 01 ♡</h3>
+
+        <div class="field">
+            <label for="appreciation-front-1">
+                Card Front
+            </label>
+            <input
+                type="text"
+                id="appreciation-front-1"
+                placeholder="something about you..."
+            >
+        </div>
+
+        <div class="field">
+            <label for="appreciation-back-1">
+                Revealed Message
+            </label>
+            <textarea
+                id="appreciation-back-1"
+                placeholder="Write what you appreciate..."
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="memory-editor">
+        <h3>Appreciation Card 02 ♡</h3>
+
+        <div class="field">
+            <label for="appreciation-front-2">
+                Card Front
+            </label>
+            <input
+                type="text"
+                id="appreciation-front-2"
+                placeholder="another little thing..."
+            >
+        </div>
+
+        <div class="field">
+            <label for="appreciation-back-2">
+                Revealed Message
+            </label>
+            <textarea
+                id="appreciation-back-2"
+                placeholder="Write what you appreciate..."
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="memory-editor">
+        <h3>Appreciation Card 03 ♡</h3>
+
+        <div class="field">
+            <label for="appreciation-front-3">
+                Card Front
+            </label>
+            <input
+                type="text"
+                id="appreciation-front-3"
+                placeholder="something I notice..."
+            >
+        </div>
+
+        <div class="field">
+            <label for="appreciation-back-3">
+                Revealed Message
+            </label>
+            <textarea
+                id="appreciation-back-3"
+                placeholder="Write what you appreciate..."
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="memory-editor">
+        <h3>Appreciation Card 04 ♡</h3>
+
+        <div class="field">
+            <label for="appreciation-front-4">
+                Card Front
+            </label>
+            <input
+                type="text"
+                id="appreciation-front-4"
+                placeholder="one more thing..."
+            >
+        </div>
+
+        <div class="field">
+            <label for="appreciation-back-4">
+                Revealed Message
+            </label>
+            <textarea
+                id="appreciation-back-4"
+                placeholder="Write what you appreciate..."
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="memory-editor">
+        <h3>Appreciation Card 05 ♡</h3>
+
+        <div class="field">
+            <label for="appreciation-front-5">
+                Card Front
+            </label>
+            <input
+                type="text"
+                id="appreciation-front-5"
+                placeholder="and finally..."
+            >
+        </div>
+
+        <div class="field">
+            <label for="appreciation-back-5">
+                Revealed Message
+            </label>
+            <textarea
+                id="appreciation-back-5"
+                placeholder="Write what you appreciate..."
+            ></textarea>
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="appreciation-ending">
+            Ending Text
+        </label>
+        <input
+            type="text"
+            id="appreciation-ending"
+            placeholder="and that's only a little piece of it ♡"
+        >
+    </div>
+</section>
+
+    <!-- MUSIC -->
+
+    <section class="editor-card">
+
+        <h2>
+            Background Music
+        </h2>
+
+        <div class="field">
+
+            <label for="music-url">
+                Music file path / URL
+            </label>
+
+            <input
+                type="text"
+                id="music-url"
+                placeholder="assets/music.mp3"
+            >
+
+        </div>
+
+        <p class="note">
+            We'll connect the background music to the birthday site next.
+        </p>
+
+    </section>
+
+
+    <!-- SAVE / PUBLISH -->
+
+    <div class="save-area">
+
+        <div class="button-row">
+
+            <button
+                class="action-button"
+                id="save-button"
+            >
+                Save Changes ♡
+            </button>
+
+            <button
+                class="action-button"
+                id="publish-button"
+            >
+                Publish ♡
+            </button>
+
+            <button
+                class="action-button"
+                id="unpublish-button"
+            >
+                Unpublish
+            </button>
+
+            <button
+                class="action-button"
+                id="logout-button"
+            >
+                Log Out
+            </button>
+
+        </div>
+
+        <div id="save-status"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SUPABASE
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase-config.js"></script>
+
+
+<script>
+
+const EDITOR_USER_ID =
+    "cfc7825f-eb58-41a1-8fa9-237a15559595";
+
+const CONTENT_ID = 1;
+
+const STORAGE_BUCKET =
+    "Maja's assets";
+
+const loginScreen =
+    document.getElementById("login-screen");
+
+const editorContainer =
+    document.querySelector(".editor-container");
+
+const loginButton =
+    document.getElementById("login-button");
+
+const loginEmail =
+    document.getElementById("login-email");
+
+const loginPassword =
+    document.getElementById("login-password");
+
+const loginStatus =
+    document.getElementById("login-status");
+
+
+/* =========================================================
+   SHOW / HIDE
+========================================================= */
+
+function showLogin() {
+
+    loginScreen.style.display = "flex";
+
+    editorContainer.style.display = "none";
+
+}
+
+
+function showEditor() {
+
+    loginScreen.style.display = "none";
+
+    editorContainer.style.display = "block";
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login() {
+
+    const email =
+        loginEmail.value.trim();
+
+    const password =
+        loginPassword.value;
+
+    if (!email || !password) {
+
+        loginStatus.textContent =
+            "Please enter your email and password.";
+
+        return;
+    }
+
+    loginButton.disabled = true;
+
+    loginStatus.textContent =
+        "Logging in... ♡";
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data.user) {
+            throw new Error(
+                "No user session was returned."
+            );
+        }
+
+        if (
+            data.user.id !==
+            EDITOR_USER_ID
+        ) {
+
+            await supabaseClient.auth.signOut();
+
+            throw new Error(
+                "This account is not authorized to use the editor."
+            );
+        }
+
+        await loadFromSupabase();
+
+        showEditor();
+
+    } catch (error) {
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+        loginStatus.textContent =
+            error.message ||
+            "Login failed.";
+
+        await supabaseClient.auth.signOut();
+
+        showLogin();
+
+    } finally {
+
+        loginButton.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD CONTENT
+========================================================= */
+
+async function loadFromSupabase() {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("birthday_content")
+        .select("content, published, updated_at")
+        .eq("id", CONTENT_ID)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    if (!data) {
+        throw new Error(
+            "Birthday content was not found."
+        );
+    }
+
+    const content =
+        data.content || {};
+
+
+    /* BASIC */
+
+    setValue(
+        "person-name",
+        content.personName
+    );
+
+    setValue(
+        "birthday",
+        content.birthday
+    );
+
+
+    /* WELCOME */
+
+    setValue(
+        "welcome-message",
+        content.welcomeMessage
+    );
+
+    setValue(
+        "welcome-submessage",
+        content.welcomeSubmessage
+    );
+
+
+    /* PHOTOS */
+
+    if (
+        Array.isArray(content.photos)
+    ) {
+
+        content.photos
+            .slice(0, 8)
+            .forEach(
+                (photo, index) => {
+
+                    const number =
+                        index + 1;
+
+                    setValue(
+                        "photo-image-" + number,
+                        photo.image ||
+                        photo.src ||
+                        ""
+                    );
+
+                    setValue(
+                        "photo-caption-" + number,
+                        photo.caption ||
+                        ""
+                    );
+
+                    showPreview(
+                        "photo-preview-" + number,
+                        "photo-url-" + number,
+                        photo.image ||
+                        photo.src ||
+                        ""
+                    );
+
+                }
+            );
+    }
+
+
+    /* MEMORIES */
+
+    if (
+        Array.isArray(content.memories)
+    ) {
+
+        content.memories
+            .slice(0, 3)
+            .forEach(
+                (memory, index) => {
+
+                    const number =
+                        index + 1;
+
+                    setValue(
+                        "memory-title-" + number,
+                        memory.title
+                    );
+
+                    setValue(
+                        "memory-date-" + number,
+                        memory.date
+                    );
+
+                    setValue(
+                        "memory-image-" + number,
+                        memory.image ||
+                        ""
+                    );
+
+                    setValue(
+                        "memory-story-" + number,
+                        memory.caption ||
+                        memory.story ||
+                        ""
+                    );
+
+                    showPreview(
+                        "memory-preview-" + number,
+                        "memory-url-" + number,
+                        memory.image ||
+                        ""
+                    );
+
+                }
+            );
+    }
+
+
+    /* LETTER */
+
+    setValue(
+        "letter-message",
+        content.letterMessage
+    );
+
+    setValue(
+        "letter-signature",
+        content.letterSignature
+    );
+
+    /* APPRECIATION */
+
+if (content.appreciation) {
+
+    setValue(
+        "appreciation-kicker",
+        content.appreciation.kicker
+    );
+
+    setValue(
+        "appreciation-title",
+        content.appreciation.title
+    );
+
+    setValue(
+        "appreciation-intro",
+        content.appreciation.intro
+    );
+
+    const cards =
+        Array.isArray(content.appreciation.cards)
+            ? content.appreciation.cards
+            : [];
+
+    cards.slice(0, 5).forEach(
+        (card, index) => {
+
+            const number = index + 1;
+
+            setValue(
+                "appreciation-front-" + number,
+                card.front
+            );
+
+            setValue(
+                "appreciation-back-" + number,
+                card.back
+            );
+        }
+    );
+
+    setValue(
+        "appreciation-ending",
+        content.appreciation.ending
+    );
+}
+
+    /* MUSIC */
+
+    if (content.music) {
+
+        setValue(
+            "music-url",
+            content.music.url
+        );
+
+    }
+
+
+    const status =
+        document.getElementById(
+            "save-status"
+        );
+
+    if (status) {
+
+        status.textContent =
+            data.published
+                ? "Currently published ♡"
+                : "Currently saved as a draft.";
+
+    }
+
+}
+
+
+/* =========================================================
+   COLLECT CONTENT
+========================================================= */
+
+function collectContent() {
+
+    const photos = [];
+
+    for (
+        let i = 1;
+        i <= 8;
+        i++
+    ) {
+
+        photos.push({
+
+            image:
+                getValue(
+                    "photo-image-" + i
+                ),
+
+            caption:
+                getValue(
+                    "photo-caption-" + i
+                )
+
+        });
+
+    }
+
+
+    const memories = [];
+
+    for (
+        let i = 1;
+        i <= 3;
+        i++
+    ) {
+
+        memories.push({
+
+            title:
+                getValue(
+                    "memory-title-" + i
+                ),
+
+            date:
+                getValue(
+                    "memory-date-" + i
+                ),
+
+            image:
+                getValue(
+                    "memory-image-" + i
+                ),
+
+            caption:
+                getValue(
+                    "memory-story-" + i
+                )
+
+        });
+
+    }
+
+
+    return {
+
+        personName:
+            getValue("person-name"),
+
+        birthday:
+            getValue("birthday"),
+
+        welcomeMessage:
+            getValue("welcome-message"),
+
+        welcomeSubmessage:
+            getValue("welcome-submessage"),
+
+        photos,
+
+        memories,
+
+        letterMessage:
+            getValue("letter-message"),
+
+        letterSignature:
+            getValue("letter-signature"),
+
+        appreciation: {
+
+            kicker:
+                getValue("appreciation-kicker"),
+
+            title:
+                getValue("appreciation-title"),
+
+            intro:
+                getValue("appreciation-intro"),
+
+            cards: [
+
+                {
+                    front:
+                        getValue(
+                            "appreciation-front-1"
+                        ),
+
+                    back:
+                        getValue(
+                            "appreciation-back-1"
+                        )
+                },
+
+                {
+                    front:
+                        getValue(
+                            "appreciation-front-2"
+                        ),
+
+                    back:
+                        getValue(
+                            "appreciation-back-2"
+                        )
+                },
+
+                {
+                    front:
+                        getValue(
+                            "appreciation-front-3"
+                        ),
+
+                    back:
+                        getValue(
+                            "appreciation-back-3"
+                        )
+                },
+
+                {
+                    front:
+                        getValue(
+                            "appreciation-front-4"
+                        ),
+
+                    back:
+                        getValue(
+                            "appreciation-back-4"
+                        )
+                },
+
+                {
+                    front:
+                        getValue(
+                            "appreciation-front-5"
+                        ),
+
+                    back:
+                        getValue(
+                            "appreciation-back-5"
+                        )
+                }
+
+            ],
+
+            ending:
+                getValue("appreciation-ending")
+
+        },
+
+        music: {
+
+            url:
+                getValue("music-url")
+
+        }
+
+    };
+
+}
+
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function saveToSupabase() {
+
+    const saveButton =
+        document.getElementById(
+            "save-button"
+        );
+
+    const status =
+        document.getElementById(
+            "save-status"
+        );
+
+    saveButton.disabled = true;
+
+    status.textContent =
+        "Saving to the cloud... ♡";
+
+    try {
+
+        const content =
+            collectContent();
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("birthday_content")
+            .update({
+
+                content,
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+            .eq("id", CONTENT_ID);
+
+        if (error) {
+            throw error;
+        }
+
+        localStorage.setItem(
+            "janggBirthdayContent",
+            JSON.stringify(content)
+        );
+
+        status.textContent =
+            "✓ Saved successfully ♡";
+
+    } catch (error) {
+
+        console.error(
+            "SAVE ERROR:",
+            error
+        );
+
+        status.textContent =
+            "❌ Could not save: " +
+            error.message;
+
+    } finally {
+
+        saveButton.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   UPLOAD IMAGE
+========================================================= */
+
+async function uploadImage(
+    file,
+    type,
+    number
+) {
+
+    if (!file) {
+        return;
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert(
+            "Please choose an image file."
+        );
+
+        return;
+
+    }
+
+
+    const status =
+        document.getElementById(
+            type + "-status-" + number
+        );
+
+    const fileInput =
+        document.getElementById(
+            type + "-file-" + number
+        );
+
+
+    status.textContent =
+        "Uploading... ♡";
+
+    fileInput.disabled = true;
+
+
+    try {
+
+        const extension =
+            getFileExtension(file.name);
+
+        const filePath =
+            type +
+            "s/" +
+            type +
+            "-" +
+            number +
+            "-" +
+            Date.now() +
+            extension;
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .storage
+            .from(STORAGE_BUCKET)
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl: "3600",
+                    upsert: false
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const {
+            data
+        } =
+        supabaseClient
+            .storage
+            .from(STORAGE_BUCKET)
+            .getPublicUrl(filePath);
+
+
+        const publicUrl =
+            data.publicUrl;
+
+
+        const imageInput =
+            document.getElementById(
+                type + "-image-" + number
+            );
+
+        imageInput.value =
+            publicUrl;
+
+
+        showPreview(
+            type + "-preview-" + number,
+            type + "-url-" + number,
+            publicUrl
+        );
+
+
+        status.textContent =
+            "✓ Uploaded ♡";
+
+
+        /*
+         * Automatically save the new
+         * image URL to the database.
+         */
+
+        await saveToSupabase();
+
+    } catch (error) {
+
+        console.error(
+            "UPLOAD ERROR:",
+            error
+        );
+
+        status.textContent =
+            "❌ Upload failed";
+
+        alert(
+            "Upload failed:\n\n" +
+            error.message
+        );
+
+    } finally {
+
+        fileInput.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function showPreview(
+    previewId,
+    urlId,
+    url
+) {
+
+    const preview =
+        document.getElementById(
+            previewId
+        );
+
+    const urlBox =
+        document.getElementById(
+            urlId
+        );
+
+    if (!preview) {
+        return;
+    }
+
+
+    if (!url) {
+
+        preview.innerHTML = `
+            <div class="image-placeholder">
+                <div class="heart">♡</div>
+                Choose a photo
+            </div>
+        `;
+
+        if (urlBox) {
+            urlBox.textContent = "";
+        }
+
+        return;
+    }
+
+
+    preview.innerHTML = "";
+
+    const image =
+        document.createElement("img");
+
+    image.src = url;
+
+    image.alt = "Uploaded photo";
+
+    image.onerror = function() {
+
+        preview.innerHTML = `
+            <div class="image-placeholder">
+                <div class="heart">♡</div>
+                Image could not load
+            </div>
+        `;
+
+    };
+
+    preview.appendChild(image);
+
+
+    if (urlBox) {
+
+        urlBox.textContent =
+            "Saved ✓";
+
+    }
+
+}
+
+
+/* =========================================================
+   FILE INPUTS
+========================================================= */
+
+for (
+    let i = 1;
+    i <= 8;
+    i++
+) {
+
+    const input =
+        document.getElementById(
+            "photo-file-" + i
+        );
+
+    input.addEventListener(
+        "change",
+        function() {
+
+            const file =
+                this.files[0];
+
+            uploadImage(
+                file,
+                "photo",
+                i
+            );
+
+        }
+    );
+
+}
+
+
+for (
+    let i = 1;
+    i <= 3;
+    i++
+) {
+
+    const input =
+        document.getElementById(
+            "memory-file-" + i
+        );
+
+    input.addEventListener(
+        "change",
+        function() {
+
+            const file =
+                this.files[0];
+
+            uploadImage(
+                file,
+                "memory",
+                i
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PUBLISH
+========================================================= */
+
+async function publishSite() {
+
+    const publishButton =
+        document.getElementById(
+            "publish-button"
+        );
+
+    const status =
+        document.getElementById(
+            "save-status"
+        );
+
+
+    publishButton.disabled = true;
+
+    status.textContent =
+        "Saving and publishing... ♡";
+
+
+    try {
+
+        const content =
+            collectContent();
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("birthday_content")
+            .update({
+
+                content,
+
+                published: true,
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+            .eq("id", CONTENT_ID);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        localStorage.setItem(
+            "janggBirthdayContent",
+            JSON.stringify(content)
+        );
+
+
+        status.textContent =
+            "✓ Birthday website is published! ♡";
+
+
+    } catch (error) {
+
+        console.error(
+            "PUBLISH ERROR:",
+            error
+        );
+
+        status.textContent =
+            "❌ Could not publish: " +
+            error.message;
+
+    } finally {
+
+        publishButton.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   UNPUBLISH
+========================================================= */
+
+async function unpublishSite() {
+
+    const button =
+        document.getElementById(
+            "unpublish-button"
+        );
+
+    const status =
+        document.getElementById(
+            "save-status"
+        );
+
+
+    button.disabled = true;
+
+    status.textContent =
+        "Unpublishing...";
+
+
+    try {
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("birthday_content")
+            .update({
+
+                published: false,
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+            .eq("id", CONTENT_ID);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        status.textContent =
+            "✓ Website unpublished. It is private again.";
+
+
+    } catch (error) {
+
+        console.error(
+            "UNPUBLISH ERROR:",
+            error
+        );
+
+        status.textContent =
+            "❌ Could not unpublish: " +
+            error.message;
+
+    } finally {
+
+        button.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    showLogin();
+
+    loginPassword.value = "";
+
+    loginStatus.textContent = "";
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getValue(
+    id,
+    fallback = ""
+) {
+
+    const element =
+        document.getElementById(id);
+
+    return element
+        ? element.value
+        : fallback;
+
+}
+
+
+function setValue(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(id);
+
+    if (
+        element &&
+        value !== undefined &&
+        value !== null
+    ) {
+
+        element.value =
+            value;
+
+    }
+
+}
+
+
+function getFileExtension(
+    filename
+) {
+
+    const lastDot =
+        filename.lastIndexOf(".");
+
+    if (lastDot === -1) {
+        return ".jpg";
+    }
+
+    return filename
+        .substring(lastDot)
+        .toLowerCase();
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+
+loginPassword.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    }
+);
+
+
+loginEmail.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    }
+);
+
+
+document
+    .getElementById("save-button")
+    .addEventListener(
+        "click",
+        saveToSupabase
+    );
+
+
+document
+    .getElementById("publish-button")
+    .addEventListener(
+        "click",
+        publishSite
+    );
+
+
+document
+    .getElementById("unpublish-button")
+    .addEventListener(
+        "click",
+        unpublishSite
+    );
+
+
+document
+    .getElementById("logout-button")
+    .addEventListener(
+        "click",
+        logout
+    );
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+async function initializeEditor() {
+
+    showLogin();
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.getSession();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const session =
+            data.session;
+
+
+        if (
+            session &&
+            session.user &&
+            session.user.id ===
+            EDITOR_USER_ID
+        ) {
+
+            await loadFromSupabase();
+
+            showEditor();
+
+        } else {
+
+            showLogin();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "SESSION ERROR:",
+            error
+        );
+
+        loginStatus.textContent =
+            "Could not connect: " +
+            error.message;
+
+        showLogin();
+
+    }
+
+}
+
+
+initializeEditor();
+
+</script>
+
+<!-- =========================================================
+     POLAROID WALL + OPEN WHEN
+     INTEGRATED SAVE / PUBLISH VERSION
+========================================================= -->
+
+<style>
+/* =========================================================
+   POLAROID EDITOR
+========================================================= */
+
+.polaroid-editor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.polaroid-editor {
+    background: #fff7fa;
+    border: 1px solid #efd3de;
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.polaroid-editor h3 {
+    margin: 0 0 14px;
+    color: #87566a;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.polaroid-preview {
+    width: 100%;
+    height: 210px;
+    border-radius: 12px;
+    border: 1px dashed #e3b9c9;
+    background: #fffafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.polaroid-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.polaroid-preview-placeholder {
+    color: #b98a9c;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.polaroid-caption {
+    margin-top: 10px;
+}
+
+.polaroid-status {
+    min-height: 18px;
+    margin: 8px 0 0;
+    color: #a17486;
+    font-size: 12px;
+}
+
+.polaroid-upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 11px;
+    border: 1px solid #d9a8ba;
+    background: #fff;
+    color: #87566a;
+    cursor: pointer;
+    font-family: inherit;
+    transition: .2s ease;
+}
+
+.polaroid-upload-button:hover {
+    transform: translateY(-1px);
+    background: #fff0f5;
+}
+
+.polaroid-file {
+    display: none;
+}
+
+
+/* =========================================================
+   OPEN WHEN EDITOR
+========================================================= */
+
+.open-when-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.open-when-editor {
+    background: #fff7fa;
+    border: 1px solid #efd3de;
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.open-when-editor h3 {
+    margin: 0 0 14px;
+    color: #87566a;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.open-when-editor textarea {
+    min-height: 150px;
+}
+
+
+
+.seventeen-things-editor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.seventeen-things-editor{background:#fff7fa;border:1px solid #efd3de;border-radius:18px;padding:18px}
+.seventeen-things-editor h3{margin:0 0 12px;color:#87566a;font-size:17px;font-weight:500}
+.seventeen-things-editor textarea{min-height:110px}
+@media(max-width:850px){.seventeen-things-editor-grid{grid-template-columns:1fr}}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 850px) {
+    .polaroid-editor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .open-when-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .polaroid-editor-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+<!-- =========================================================
+     POLAROID WALL EDITOR
+========================================================= -->
+
+<section class="editor-card">
+
+    <h2>Floating Polaroid Wall ♡</h2>
+
+    <p class="section-description">
+        Add six little photos that will gently float around the birthday page.
+        Each one can have its own caption.
+    </p>
+
+    <div class="polaroid-editor-grid">
+
+        <!-- POLAROID 1 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 1 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-1">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-1"
+            >
+
+            <label
+                for="polaroid-file-1"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-1"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-1">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-1"
+                    placeholder="A little memory ♡"
+                >
+            </div>
+
+            <p
+                class="polaroid-status"
+                id="polaroid-status-1"
+            ></p>
+        </div>
+
+
+        <!-- POLAROID 2 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 2 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-2">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-2"
+            >
+
+            <label
+                for="polaroid-file-2"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-2"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-2">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-2"
+                    placeholder="Another favorite ♡"
+                >
+            </div>
+
+            <p class="polaroid-status" id="polaroid-status-2"></p>
+        </div>
+
+
+        <!-- POLAROID 3 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 3 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-3">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-3"
+            >
+
+            <label
+                for="polaroid-file-3"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-3"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-3">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-3"
+                    placeholder="This little moment ♡"
+                >
+            </div>
+
+            <p class="polaroid-status" id="polaroid-status-3"></p>
+        </div>
+
+
+        <!-- POLAROID 4 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 4 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-4">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-4"
+            >
+
+            <label
+                for="polaroid-file-4"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-4"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-4">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-4"
+                    placeholder="One I'll remember ♡"
+                >
+            </div>
+
+            <p class="polaroid-status" id="polaroid-status-4"></p>
+        </div>
+
+
+        <!-- POLAROID 5 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 5 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-5">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-5"
+            >
+
+            <label
+                for="polaroid-file-5"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-5"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-5">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-5"
+                    placeholder="A happy memory ♡"
+                >
+            </div>
+
+            <p class="polaroid-status" id="polaroid-status-5"></p>
+        </div>
+
+
+        <!-- POLAROID 6 -->
+        <div class="polaroid-editor">
+            <h3>Polaroid 6 ♡</h3>
+
+            <div class="polaroid-preview" id="polaroid-preview-6">
+                <div class="polaroid-preview-placeholder">
+                    ♡<br>
+                    No photo yet
+                </div>
+            </div>
+
+            <input
+                type="file"
+                accept="image/*"
+                class="polaroid-file"
+                id="polaroid-file-6"
+            >
+
+            <label
+                for="polaroid-file-6"
+                class="polaroid-upload-button"
+            >
+                Upload / Replace Photo
+            </label>
+
+            <input
+                type="hidden"
+                id="polaroid-image-6"
+            >
+
+            <div class="field polaroid-caption">
+                <label for="polaroid-caption-6">
+                    Caption
+                </label>
+
+                <input
+                    type="text"
+                    id="polaroid-caption-6"
+                    placeholder="Forever a favorite ♡"
+                >
+            </div>
+
+            <p class="polaroid-status" id="polaroid-status-6"></p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     OPEN WHEN LETTERS
+========================================================= -->
+
+<section class="editor-card">
+
+    <h2>Open When... Letters ♡</h2>
+
+    <p class="section-description">
+        Write little letters she can discover whenever she needs them.
+    </p>
+
+    <div class="open-when-grid">
+
+        <div class="open-when-editor">
+            <h3>Open when you're happy ♡</h3>
+
+            <div class="field">
+                <label for="open-when-title-1">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="open-when-title-1"
+                    value="Open when you're happy ♡"
+                >
+            </div>
+
+            <div class="field">
+                <label for="open-when-message-1">
+                    Letter
+                </label>
+
+                <textarea
+                    id="open-when-message-1"
+                    placeholder="Write your little letter..."
+                ></textarea>
+            </div>
+        </div>
+
+
+        <div class="open-when-editor">
+            <h3>Open when you're sad ♡</h3>
+
+            <div class="field">
+                <label for="open-when-title-2">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="open-when-title-2"
+                    value="Open when you're sad ♡"
+                >
+            </div>
+
+            <div class="field">
+                <label for="open-when-message-2">
+                    Letter
+                </label>
+
+                <textarea
+                    id="open-when-message-2"
+                    placeholder="Write your little letter..."
+                ></textarea>
+            </div>
+        </div>
+
+
+        <div class="open-when-editor">
+            <h3>Open when you miss me ♡</h3>
+
+            <div class="field">
+                <label for="open-when-title-3">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="open-when-title-3"
+                    value="Open when you miss me ♡"
+                >
+            </div>
+
+            <div class="field">
+                <label for="open-when-message-3">
+                    Letter
+                </label>
+
+                <textarea
+                    id="open-when-message-3"
+                    placeholder="Write your little letter..."
+                ></textarea>
+            </div>
+        </div>
+
+
+        <div class="open-when-editor">
+            <h3>Open when you need encouragement ♡</h3>
+
+            <div class="field">
+                <label for="open-when-title-4">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="open-when-title-4"
+                    value="Open when you need encouragement ♡"
+                >
+            </div>
+
+            <div class="field">
+                <label for="open-when-message-4">
+                    Letter
+                </label>
+
+                <textarea
+                    id="open-when-message-4"
+                    placeholder="Write your little letter..."
+                ></textarea>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="editor-card">
+    <h2>17 Birthday Tickets ♡</h2>
+    <p class="section-description">
+        Write seventeen little birthday tickets. Each one can hold a tiny experience, treat, adventure, or special moment for her 17th year.
+    </p>
+    <div class="seventeen-things-editor-grid">
+        <div class="seventeen-things-editor">
+            <h3>Ticket 1 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-1">Ticket message</label>
+                <textarea id="seventeen-thing-1" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 2 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-2">Ticket message</label>
+                <textarea id="seventeen-thing-2" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 3 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-3">Ticket message</label>
+                <textarea id="seventeen-thing-3" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 4 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-4">Ticket message</label>
+                <textarea id="seventeen-thing-4" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 5 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-5">Ticket message</label>
+                <textarea id="seventeen-thing-5" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 6 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-6">Ticket message</label>
+                <textarea id="seventeen-thing-6" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 7 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-7">Ticket message</label>
+                <textarea id="seventeen-thing-7" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 8 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-8">Ticket message</label>
+                <textarea id="seventeen-thing-8" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 9 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-9">Ticket message</label>
+                <textarea id="seventeen-thing-9" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 10 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-10">Ticket message</label>
+                <textarea id="seventeen-thing-10" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 11 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-11">Ticket message</label>
+                <textarea id="seventeen-thing-11" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 12 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-12">Ticket message</label>
+                <textarea id="seventeen-thing-12" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 13 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-13">Ticket message</label>
+                <textarea id="seventeen-thing-13" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 14 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-14">Ticket message</label>
+                <textarea id="seventeen-thing-14" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 15 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-15">Ticket message</label>
+                <textarea id="seventeen-thing-15" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 16 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-16">Ticket message</label>
+                <textarea id="seventeen-thing-16" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+        <div class="seventeen-things-editor">
+            <h3>Ticket 17 ♡</h3>
+            <div class="field">
+                <label for="seventeen-thing-17">Ticket message</label>
+                <textarea id="seventeen-thing-17" placeholder="Write what this ticket is for..."></textarea>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+/* =========================================================
+   NEW FEATURES — SAFE DATABASE INTEGRATION
+========================================================= */
+
+(function () {
+
+    const FEATURE_BUCKET = "Maja's assets";
+
+    const POLAROID_COUNT = 6;
+    const OPEN_WHEN_COUNT = 4;
+    const SEVENTEEN_WISHES_COUNT = 17;
+
+    let originalContent = null;
+    let originalPublished = false;
+
+
+    /* =====================================================
+       HELPERS
+    ===================================================== */
+
+    function getEl(id) {
+        return document.getElementById(id);
+    }
+
+
+    function getPolaroidsFromEditor() {
+
+        const polaroids = [];
+
+        for (let i = 1; i <= POLAROID_COUNT; i++) {
+
+            polaroids.push({
+                image:
+                    getEl("polaroid-image-" + i)?.value || "",
+
+                caption:
+                    getEl("polaroid-caption-" + i)?.value || "",
+
+                rotation:
+                    [-6, 5, -4, 7, -5, 4][i - 1]
+            });
+        }
+
+        return polaroids;
+    }
+
+
+    function getOpenWhenFromEditor() {
+
+        const letters = [];
+
+        for (let i = 1; i <= OPEN_WHEN_COUNT; i++) {
+
+            letters.push({
+                title:
+                    getEl("open-when-title-" + i)?.value || "",
+
+                message:
+                    getEl("open-when-message-" + i)?.value || ""
+            });
+        }
+
+        return letters;
+    }
+
+
+    function getSeventeenWishesFromEditor() {
+        const items = [];
+        for (let i = 1; i <= SEVENTEEN_WISHES_COUNT; i++) {
+            items.push({ message: getEl("seventeen-thing-" + i)?.value || "" });
+        }
+        return items;
+    }
+
+
+    function addNewFeaturesToContent(baseContent) {
+
+        const content = {
+            ...(baseContent || {})
+        };
+
+        content.polaroids =
+            getPolaroidsFromEditor();
+
+        content.openWhen =
+            getOpenWhenFromEditor();
+
+        content.seventeenWishes =
+            getSeventeenWishesFromEditor();
+
+        return content;
+    }
+
+
+    /* =====================================================
+       LOAD NEW FEATURES
+    ===================================================== */
+
+    async function loadNewFeatures() {
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .from("birthday_content")
+                .select("content,published")
+                .eq("id", 1)
+                .single();
+
+
+            if (error) {
+                console.error(
+                    "NEW FEATURES LOAD ERROR:",
+                    error
+                );
+                return;
+            }
+
+
+            originalContent =
+                data?.content || {};
+
+            originalPublished =
+                data?.published || false;
+
+
+            const polaroids =
+                originalContent.polaroids || [];
+
+
+            polaroids.forEach(
+                function (item, index) {
+
+                    const number =
+                        index + 1;
+
+                    const imageInput =
+                        getEl(
+                            "polaroid-image-" + number
+                        );
+
+                    const captionInput =
+                        getEl(
+                            "polaroid-caption-" + number
+                        );
+
+
+                    if (imageInput) {
+                        imageInput.value =
+                            item.image || "";
+                    }
+
+
+                    if (captionInput) {
+                        captionInput.value =
+                            item.caption || "";
+                    }
+
+
+                    if (item.image) {
+                        showPolaroidPreview(
+                            number,
+                            item.image
+                        );
+                    }
+
+                }
+            );
+
+
+            const letters =
+                originalContent.openWhen || [];
+
+
+            letters.forEach(
+                function (item, index) {
+
+                    const number =
+                        index + 1;
+
+                    const titleInput =
+                        getEl(
+                            "open-when-title-" + number
+                        );
+
+                    const messageInput =
+                        getEl(
+                            "open-when-message-" + number
+                        );
+
+
+                    if (titleInput) {
+                        titleInput.value =
+                            item.title || "";
+                    }
+
+
+                    if (messageInput) {
+                        messageInput.value =
+                            item.message || "";
+                    }
+
+                }
+            );
+
+
+
+            const seventeenWishes =
+                originalContent.seventeenWishes ||
+                originalContent.seventeenThings ||
+                [];
+
+            seventeenWishes.slice(0, SEVENTEEN_WISHES_COUNT).forEach(
+                function (item, index) {
+                    const input = getEl("seventeen-thing-" + (index + 1));
+                    if (input) {
+                        input.value =
+                            typeof item === "string" ? item : (item?.message || "");
+                    }
+                }
+            );
+        } catch (error) {
+
+            console.error(
+                "NEW FEATURES LOAD ERROR:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       POLAROID PREVIEW
+    ===================================================== */
+
+    function showPolaroidPreview(
+        number,
+        imageUrl
+    ) {
+
+        const preview =
+            getEl(
+                "polaroid-preview-" + number
+            );
+
+
+        if (!preview) {
+            return;
+        }
+
+
+        preview.innerHTML = "";
+
+
+        const image =
+            document.createElement("img");
+
+        image.src = imageUrl;
+        image.alt =
+            "Polaroid " + number;
+
+
+        preview.appendChild(image);
+    }
+
+
+    /* =====================================================
+       IMAGE UPLOAD
+    ===================================================== */
+
+    async function uploadPolaroidImage(
+        file,
+        number
+    ) {
+
+        if (!file) {
+            return;
+        }
+
+
+        const status =
+            getEl(
+                "polaroid-status-" + number
+            );
+
+
+        const imageInput =
+            getEl(
+                "polaroid-image-" + number
+            );
+
+
+        if (status) {
+            status.textContent =
+                "Uploading photo... ♡";
+        }
+
+
+        try {
+
+            const extension =
+                file.name.includes(".")
+                    ? "." +
+                      file.name
+                          .split(".")
+                          .pop()
+                          .toLowerCase()
+                    : ".jpg";
+
+
+            const path =
+                "polaroids/" +
+                "polaroid-" +
+                number +
+                "-" +
+                Date.now() +
+                extension;
+
+
+            const {
+                error: uploadError
+            } =
+            await supabaseClient
+                .storage
+                .from(FEATURE_BUCKET)
+                .upload(
+                    path,
+                    file,
+                    {
+                        cacheControl: "3600",
+                        upsert: false
+                    }
+                );
+
+
+            if (uploadError) {
+                throw uploadError;
+            }
+
+
+            const {
+                data
+            } =
+            supabaseClient
+                .storage
+                .from(FEATURE_BUCKET)
+                .getPublicUrl(path);
+
+
+            const publicUrl =
+                data.publicUrl;
+
+
+            if (imageInput) {
+                imageInput.value =
+                    publicUrl;
+            }
+
+
+            showPolaroidPreview(
+                number,
+                publicUrl
+            );
+
+
+            if (status) {
+                status.textContent =
+                    "Photo uploaded ♡";
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "POLAROID UPLOAD ERROR:",
+                error
+            );
+
+
+            if (status) {
+                status.textContent =
+                    "Upload failed. Please try again.";
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SAVE EVERYTHING
+    ===================================================== */
+
+    async function saveEverything() {
+
+        const saveButton =
+            getEl("save-button");
+
+        const saveStatus =
+            getEl("save-status");
+
+
+        try {
+
+            if (saveButton) {
+                saveButton.disabled = true;
+                saveButton.textContent =
+                    "Saving... ♡";
+            }
+
+
+            const baseContent =
+                typeof collectContent === "function"
+                    ? collectContent()
+                    : (
+                        originalContent || {}
+                    );
+
+
+            const finalContent =
+                addNewFeaturesToContent(
+                    baseContent
+                );
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("birthday_content")
+                .update({
+                    content: finalContent,
+                    updated_at:
+                        new Date().toISOString()
+                })
+                .eq("id", 1);
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            originalContent =
+                finalContent;
+
+
+            localStorage.setItem(
+                "janggBirthdayContent",
+                JSON.stringify(
+                    finalContent
+                )
+            );
+
+
+            if (saveStatus) {
+                saveStatus.textContent =
+                    "Everything saved ♡";
+            }
+
+
+            if (saveButton) {
+                saveButton.textContent =
+                    "Saved ♡";
+            }
+
+
+            setTimeout(
+                function () {
+
+                    if (saveButton) {
+                        saveButton.disabled =
+                            false;
+
+                        saveButton.textContent =
+                            "Save Changes";
+                    }
+
+                },
+                1600
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "SAVE EVERYTHING ERROR:",
+                error
+            );
+
+
+            if (saveStatus) {
+                saveStatus.textContent =
+                    "Could not save: " +
+                    error.message;
+            }
+
+
+            if (saveButton) {
+                saveButton.disabled =
+                    false;
+
+                saveButton.textContent =
+                    "Save Changes";
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PUBLISH EVERYTHING
+    ===================================================== */
+
+    async function publishEverything() {
+
+        const publishButton =
+            getEl("publish-button");
+
+
+        try {
+
+            if (publishButton) {
+                publishButton.disabled = true;
+                publishButton.textContent =
+                    "Publishing... ♡";
+            }
+
+
+            const baseContent =
+                typeof collectContent === "function"
+                    ? collectContent()
+                    : (
+                        originalContent || {}
+                    );
+
+
+            const finalContent =
+                addNewFeaturesToContent(
+                    baseContent
+                );
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("birthday_content")
+                .update({
+                    content: finalContent,
+                    published: true,
+                    updated_at:
+                        new Date().toISOString()
+                })
+                .eq("id", 1);
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            originalContent =
+                finalContent;
+
+            originalPublished = true;
+
+
+            localStorage.setItem(
+                "janggBirthdayContent",
+                JSON.stringify(
+                    finalContent
+                )
+            );
+
+
+            if (publishButton) {
+                publishButton.textContent =
+                    "Published ♡";
+            }
+
+
+            setTimeout(
+                function () {
+
+                    if (publishButton) {
+                        publishButton.disabled =
+                            false;
+
+                        publishButton.textContent =
+                            "Publish Site";
+                    }
+
+                },
+                1600
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "PUBLISH EVERYTHING ERROR:",
+                error
+            );
+
+
+            if (publishButton) {
+                publishButton.disabled =
+                    false;
+
+                publishButton.textContent =
+                    "Publish Site";
+            }
+
+            alert(
+                "Could not publish: " +
+                error.message
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FILE BUTTONS
+    ===================================================== */
+
+    for (
+        let i = 1;
+        i <= POLAROID_COUNT;
+        i++
+    ) {
+
+        const fileInput =
+            getEl(
+                "polaroid-file-" + i
+            );
+
+
+        if (fileInput) {
+
+            fileInput.addEventListener(
+                "change",
+                function () {
+
+                    const file =
+                        this.files &&
+                        this.files[0];
+
+
+                    if (file) {
+                        uploadPolaroidImage(
+                            file,
+                            i
+                        );
+                    }
+
+                }
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       IMPORTANT:
+       CAPTURE SAVE/PUBLISH BEFORE ORIGINAL
+       LISTENERS RUN
+    ===================================================== */
+
+    const saveButton =
+        getEl("save-button");
+
+
+    if (saveButton) {
+
+        saveButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                saveEverything();
+
+            },
+            true
+        );
+
+    }
+
+
+    const publishButton =
+        getEl("publish-button");
+
+
+    if (publishButton) {
+
+        publishButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                publishEverything();
+
+            },
+            true
+        );
+
+    }
+
+
+    /* =====================================================
+       LOAD AFTER EDITOR SESSION IS READY
+    ===================================================== */
+
+    setTimeout(
+        loadNewFeatures,
+        1800
+    );
+
+
+})();
+</script>
+
+</body>
+</html>
