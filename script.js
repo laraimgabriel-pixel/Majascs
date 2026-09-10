@@ -10,7 +10,7 @@ const SECRET_DATE = "021425";
    COUNTDOWN SETTINGS
 ========================================= */
 
-const TEST_MODE = true;
+const TEST_MODE = false;
 const TEST_COUNTDOWN_SECONDS = 05;
 
 
